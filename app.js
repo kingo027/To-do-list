@@ -84,31 +84,31 @@ app.post("/", async function(req,res){
     }
 });
 
-app.post("/delete", (req, res) => {
-  const checkedItemId = req.body.checkbox;
-  Item.findByIdAndRemove({ _id: checkedItemId})
-    .then(() => {
-      res.redirect("/");
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-});
-
-// app.post("/delete", async function (req, res) {
+// app.post("/delete", (req, res) => {
 //   const checkedItemId = req.body.checkbox;
-//   const listName = req.body.listName;
-//   console.log(listName);
- 
-//   if (listName === "Today") {
-//       await Item.findByIdAndRemove({ _id: checkedItemId});
-//       res.redirect("/");  
-//   } else {
-//     await List.findOneAndUpdate( { name: listName },
-//       { $pull: { items: { _id: checkedItemId } } } );
-//     res.redirect("/" + listName);
-//   }
+//   Item.findByIdAndRemove({ _id: checkedItemId})
+//     .then(() => {
+//       res.redirect("/");
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//     })
 // });
+
+app.post("/delete", async function (req, res) {
+  const checkedItemId = req.body.checkbox;
+  const listName = req.body.listName;
+  console.log(req.body);
+ 
+  if (listName == 'Today') {
+      await Item.findByIdAndRemove({ _id: checkedItemId});
+      res.redirect("/");  
+  } else {
+    await List.findOneAndUpdate( { name: listName },
+      { $pull: { items: { _id: checkedItemId } } } );
+    res.redirect("/" + listName);
+  }
+});
 
 app.get("/:customListName", async function (req, res) {
   const customListName = (req.params.customListName);
